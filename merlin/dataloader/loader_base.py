@@ -79,7 +79,7 @@ class LoaderBase:
         else:
             self.device = "cpu" if not HAS_GPU or dataset.cpu else 0
 
-        if self.device == "cpu":
+        if self.device == "cpu" or cupy is None:
             self._array_lib = np
         else:
             self._array_lib = cupy
