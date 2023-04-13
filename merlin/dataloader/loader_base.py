@@ -447,6 +447,9 @@ class LoaderBase:
         if self.device == "cpu":
             tensor = df_or_series.to_numpy()
         else:
+            print('*' * 80)
+            print(self.device, type(self.device))
+            print('*' * 80)
             with cupy.cuda.Device(self.device):
                 tensor = df_or_series.to_cupy()
 
@@ -764,7 +767,7 @@ class ChunkQueue:
             if spill is not None and not spill.empty:
                 chunks.insert(0, spill)
 
-            chunks = concat(chunks)
+            chunks = concat(chunks, device=self.dataloader.device)
             chunks.reset_index(drop=True, inplace=True)
             chunks, spill = self.get_batch_div_chunk(chunks, self.dataloader.batch_size)
             if self.shuffle:
